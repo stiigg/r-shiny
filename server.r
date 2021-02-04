@@ -1,28 +1,32 @@
-library(shiny)
-
-# Define server logic for slider examples
 shinyServer(function(input, output) {
   
-  # Reactive expression to compose a data frame containing all of the values
-  sliderValues <- reactive({
-    
-    # Compose data frame
-    data.frame(
-      Name = c("Integer", 
-               "Decimal",
-               "Range",
-               "Custom Format",
-               "Animation"),
-      Value = as.character(c(input$integer, 
-                             input$decimal,
-                             paste(input$range, collapse=' '),
-                             input$format,
-                             input$animation)), 
-      stringsAsFactors=FALSE)
-  }) 
+  this_table <- reactiveVal(this_table)
   
-  # Show the values using an HTML table
-  output$values <- renderTable({
-    sliderValues()
+  output$contents <- renderTable({
+    
+    # input$file1 will be NULL initially. After the user selects and uploads a 
+    # file, it will be a data frame with 'name', 'size', 'type', and 'datapath' 
+    # columns. The 'datapath' column will contain the local filenames where the 
+    # data can be found.
+    
+    this_table = read.csv("C:/Users/chris/Desktop/r/project2/data/csv/status1.csv", header=T, sep=';', quote='')
+    
+    inFile <- input$file1
+    
+    if (is.null(inFile))
+      return(NULL)
+    
+    this_table = read.csv(inFile$datapath, header=input$header, sep=input$sep, quote=input$quote)
+    
+    # When user press add button then it whil whrite in the table
+    observeEvent(input$add_btn, {
+    t = rbind(data.frame(Output.group="",CSR.Table.Name="",SAS.program="",Output.rtf="",Table.Title="",Status.OK.NOT.KO,Comments  = input$Comments ), this_table)
+    this_table <<- t
+    
+    this_table
+  })
+  
+  
+
   })
 })
