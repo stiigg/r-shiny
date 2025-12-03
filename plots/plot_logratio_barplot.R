@@ -2,6 +2,11 @@
 library(ggplot2)
 library(tidyverse)
 
+# Verify required input file exists
+if (!file.exists("results/logratio_ci.rds")) {
+  stop("Error: results/logratio_ci.rds not found. Run coda_analysis.R first.")
+}
+
 ci_df <- readRDS("results/logratio_ci.rds")
 
 p1 <- ggplot(ci_df, aes(x = behaviour, y = log_ratio)) +

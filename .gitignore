@@ -1,5 +1,21 @@
-.Rproj.user
+# R files
 .Rhistory
 .RData
+.Rproj.user
 .Ruserdata
-*.Rproj
+
+# Output directories
+results/
+figures/
+
+# renv (if implemented later)
+renv/
+renv.lock
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*~

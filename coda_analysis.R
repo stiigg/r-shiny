@@ -12,6 +12,39 @@ library(boot)
 # 1. LOAD DATA ----
 data <- read.csv("data/example_movement_data.csv")
 
+# Validate input data
+cat("\nValidating compositional data...\n")
+
+# Check for missing values
+if (any(is.na(data[, c("sleep", "sedentary", "lpa", "mvpa")])) ) {
+  stop("Error: Missing values (NA) found in time-use variables. Please impute or remove.")
+}
+
+# Check for negative values
+if (any(data[, c("sleep", "sedentary", "lpa", "mvpa")] < 0)) {
+  stop("Error: Negative values found in time-use variables. All values must be >= 0.")
+}
+
+# Check if components sum to approximately 1440 minutes (24 hours)
+row_sums <- rowSums(data[, c("sleep", "sedentary", "lpa", "mvpa")])
+tolerance <- 1  # Allow 1 minute tolerance for rounding
+
+if (any(abs(row_sums - 1440) > tolerance)) {
+  n_invalid <- sum(abs(row_sums - 1440) > tolerance)
+  warning(n_invalid, " observations have time totals != 1440 minutes.\n",
+          "These will be normalized using closure operation in acomp().")
+}
+
+# Check for zeros (problematic in log-ratio transformations)
+zero_counts <- colSums(data[, c("sleep", "sedentary", "lpa", "mvpa")] == 0)
+if (any(zero_counts > 0)) {
+  cat("Warning: Zero values detected:\n")
+  print(zero_counts[zero_counts > 0])
+  cat("Consider replacing zeros with small values (e.g., 0.5 min) if errors occur.\n")
+}
+
+cat("✓ Data validation complete\n")
+
 # 2. CREATE COMPOSITION ----
 # Order: sleep, sedentary, lpa, mvpa
 data$composition <- acomp(data[, c("sleep", "sedentary", "lpa", "mvpa")])
