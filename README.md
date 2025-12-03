@@ -8,6 +8,7 @@ This repository contains R code to:
 - Compute geometric means and compositional differences between groups
 - Generate bar plots of log-ratio differences with bootstrap confidence intervals
 - Create percent-difference plots for isotemporal substitution analysis
+- Compare movement behaviours between groups (e.g., men vs. women)
 
 ## Installation
 

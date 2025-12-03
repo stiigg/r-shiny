@@ -1,5 +1,6 @@
 # coda_analysis.R
 # Compositional Data Analysis for 24-hour Movement Behaviours
+# Compares geometric means and log-ratio differences between groups
 # Author: Christian Baghai
 # Date: December 2025
 
